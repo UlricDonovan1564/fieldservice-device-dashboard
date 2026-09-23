@@ -1,0 +1,1 @@
+{"name":"fieldservice-device-dashboard","version":"1.0.0","type":"module","scripts":{"start":"tsx src/field_service.ts","test":"tsx src/device_status.test.ts","typecheck":"tsc --noEmit"},"dependencies":{"zod":"^3.23.8"},"devDependencies":{"tsx":"^4.19.0","typescript":"^5.6.3"}}
