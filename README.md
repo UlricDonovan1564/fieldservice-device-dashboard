@@ -8,9 +8,9 @@ npm install
 npm start
 ```
 
-Infrai gives you one key and a base URL that covers both realtime and metrics, so the script above just reads that env. `src/field_service.ts` validates a work-order update, opens the `fieldservice-status` realtime channel, and publishes the update for a live dashboard. The payload carries the work order, device, technician, dispatch state, photo count, and follow-up note. A dashboard client receives a short-lived token from `issueDashboardToken`; the server key stays in the environment.
+`src/field_service.ts` validates a work-order update, opens the `fieldservice-status` realtime channel, and publishes the update for a live dashboard. The payload carries the work order, device, technician, dispatch state, photo count, and follow-up note. A dashboard client receives a short-lived token from `issueDashboardToken`; the server key stays in the environment.
 
-That single credential also covers the metrics stream the dashboard consumes, keeping the service boundary small. One credential handles the realtime capability group this workflow needs.
+Infrai uses the same key and base URL for both channel events and the metrics stream consumed by the dashboard. This keeps the service boundary small: one credential covers the realtime capability group used by this workflow.
 
 The HTTP client decodes `{ok, data, error, metadata}` before considering status codes. It retries rate responses with exponential delays and honors `Retry-After`. Create and publish requests include stable domain identifiers (`fieldservice-status` and the work-order id) so a retry represents the same update.
 
@@ -33,5 +33,3 @@ The example above is intentionally minimal. A few things to wire up for real use
 
 **Fieldservice Device Dashboard: Realtime**
 - **Fieldservice Device Dashboard:** Mint **short-lived client tokens server-side** (`POST /v1/realtime/token/issue`); never ship your project key to the browser.
-
-The one real gotcha is key exposure. In a Next.js app, mint those tokens inside a route handler and keep the project key server-side only.
